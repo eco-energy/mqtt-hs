@@ -1,5 +1,5 @@
 name:                net-mqtt
-version:             0.2.4.1
+version:             0.6.2.3
 github:              "dustin/mqtt-hs"
 license:             BSD3
 author:              "Dustin Sallings"
@@ -24,23 +24,28 @@ dependencies:
 - async                >= 2.2.1 && < 2.3
 - bytestring           >= 0.10.8 && < 0.11
 - text                 >= 1.2.3 && < 1.3
-- binary               >= 0.8.6 && < 0.9
-- containers           >= 0.6.0 && < 0.7
-- stm                  >= 2.5.0 && < 2.6
+- binary               >= 0.8.5 && < 0.9
+- containers           >= 0.5.0 && < 0.7
+- stm                  >= 2.4.0 && < 2.6
 - attoparsec           >= 0.13.2 && < 0.14
 - conduit              >= 1.3.1 && < 1.4
 - conduit-extra        >= 1.3.0 && < 1.4
 - network-conduit-tls  >= 1.3.2 && < 1.4
 - network-uri          >= 2.6.1 && < 2.7
+- attoparsec-binary    >= 0.2   && < 1.0
+- deepseq              >= 1.4.4.0 && < 1.5
+- QuickCheck           >= 2.12.6.1 && < 2.14
+- websockets           >= 0.12.5.3 && < 0.13
+- connection           >= 0.2.0 && < 0.4
 
 library:
   source-dirs: src
   ghc-options: -Wall
 
 executables:
-  mqtt:
+  mqtt-example:
     main:                Main.hs
-    source-dirs:         app
+    source-dirs:         app/example
     ghc-options:
     - -Wall
     - -threaded
@@ -48,6 +53,20 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - net-mqtt
+
+  mqtt-watch:
+    main:  Main.hs
+    source-dirs: app/mqtt-watch
+    ghc-options:
+    - -Wall
+    - -threaded
+    - -rtsopts
+    - -eventlog
+    - -with-rtsopts=-N
+    dependencies:
+    - net-mqtt
+    - optparse-applicative
+    - bytestring
 
 tests:
   mqtt-test:
@@ -59,7 +78,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - net-mqtt
-    - QuickCheck
     - HUnit
     - tasty
     - tasty-hunit

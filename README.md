@@ -7,23 +7,25 @@ An [MQTT][mqtt] protocol implementation for Haskell.
 ### Publish
 
 ```haskell
-main :: IO
+main :: IO ()
 main = do
-  mc <- runClient mqttConfig{}
+  let (Just uri) = parseURI "mqtt://test.mosquitto.org"
+  mc <- connectURI mqttConfig{} uri
   publish mc "tmp/topic" "hello!" False
 ```
 
 ### Subscribe
 
 ```haskell
-main :: IO
+main :: IO ()
 main = do
-  mc <- runClient mqttConfig{_msgCB=Just msgReceived}
-  print =<< subscribe mc [("tmp/topic1", QoS0), ("tmp/topic2", QoS0)]
-  print =<< waitForClient mc   -- wait for the the client to disconnect
+  let (Just uri) = parseURI "mqtt://test.mosquitto.org"
+  mc <- connectURI mqttConfig{_msgCB=SimpleCallback msgReceived} uri
+  print =<< subscribe mc [("tmp/topic1", subOptions), ("tmp/topic2", subOptions)] []
+  waitForClient mc   -- wait for the the client to disconnect
 
   where
-    msgReceived _ t m = print (t,m)
+    msgReceived _ t m p = print (t,m,p)
 ```
 
 [mqtt]: http://mqtt.org/
